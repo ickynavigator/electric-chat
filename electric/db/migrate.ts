@@ -1,8 +1,11 @@
 import { spawn } from 'child_process';
+import path from 'path';
 import process from 'process';
 import { DATABASE_URL, PUBLIC_DATABASE_URL } from './utils';
 
 console.info(`Connecting to proxy at ${PUBLIC_DATABASE_URL}`);
+
+const migrationsDir = path.join(__dirname, 'migrations');
 
 const args = [
   'pg-migrations',
@@ -10,7 +13,7 @@ const args = [
   '--database',
   DATABASE_URL,
   '--directory',
-  './db/migrations',
+  migrationsDir,
 ];
 const proc = spawn('npx', args, {
   stdio: ['inherit', 'pipe', 'inherit'],
@@ -36,9 +39,9 @@ proc.on('exit', code => {
     }
   } else {
     console.error(
-      '\x1b[31m',
-      'Failed to connect to the DB. Exit code: ' + code,
-      '\x1b[0m',
+      `\x1b[31m
+Failed to connect to the DB. Exit code: ${code}
+\x1b[0m`,
     );
   }
 });
