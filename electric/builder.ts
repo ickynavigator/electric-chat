@@ -46,7 +46,14 @@ const liveServer = (buildOpts: BuildOptions) => {
       onRebuild(error, result) {
         clients.forEach(res => res.write('data: update\n\n'));
         clients.length = 0;
-        console.log(error ? error : '...');
+
+        if (!error && result) {
+          console.log('Watch build succeeded:', result);
+        }
+
+        if (error) {
+          console.error('Watch build failed:', error);
+        }
       },
     },
   }).catch(() => process.exit(1));
