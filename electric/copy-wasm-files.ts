@@ -6,12 +6,11 @@ import path from 'node:path';
 const waSqlitePath = path.join(
   __dirname,
   '..',
-  '..',
   'node_modules',
   'wa-sqlite',
   'dist',
 );
-const publicFolder = path.join(__dirname, '..', '..', 'public');
+const publicFolder = path.join(__dirname, '..', 'public');
 
 const mjsFileName = 'wa-sqlite-async.mjs';
 const mjsFile = path.join(waSqlitePath, mjsFileName);
