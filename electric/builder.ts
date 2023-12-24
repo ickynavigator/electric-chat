@@ -3,10 +3,13 @@ import { BuildOptions, build, serve } from 'esbuild';
 import inlineImage from 'esbuild-plugin-inline-image';
 import fs from 'fs-extra';
 import { IncomingMessage, ServerResponse, createServer, request } from 'http';
+import path from 'path';
 import { env } from '../env/server';
 
 const shouldMinify = env.NODE_ENV === 'production';
 const shouldServe = env.SERVE === 'true';
+const distPath = path.join(__dirname, '../dist');
+const publicPath = path.join(__dirname, '../public');
 
 const getPlatformStartCommand = (platform: string) => {
   const op = {
@@ -48,7 +51,7 @@ const liveServer = (buildOpts: BuildOptions) => {
     },
   }).catch(() => process.exit(1));
 
-  serve({ servedir: '../../dist' }, {}).then(serveResult => {
+  serve({ servedir: distPath }, {}).then(serveResult => {
     createServer((req, res) => {
       const { url, method, headers } = req;
 
@@ -101,7 +104,7 @@ const liveServer = (buildOpts: BuildOptions) => {
  */
 const buildParams: BuildOptions = {
   color: true,
-  entryPoints: ['../web/index.tsx'],
+  entryPoints: ['./src/index.tsx'],
   loader: { '.ts': 'tsx' },
   outdir: 'dist',
   minify: shouldMinify,
@@ -112,15 +115,15 @@ const buildParams: BuildOptions = {
   incremental: true,
   define: {
     __DEBUG_MODE__: JSON.stringify(env.DEBUG_MODE === 'true'),
-    __ELECTRIC_URL__: env.ELECTRIC_URL,
+    __ELECTRIC_URL__: JSON.stringify(env.ELECTRIC_URL),
   },
   external: ['fs', 'path'],
   plugins: [inlineImage()],
 };
 
 (async () => {
-  fs.removeSync('../../dist');
-  fs.copySync('../../public', '../../dist');
+  fs.removeSync(distPath);
+  fs.copySync(publicPath, distPath);
 
   if (shouldServe) {
     liveServer(buildParams);
