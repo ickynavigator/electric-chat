@@ -1,7 +1,12 @@
-export default function App() {
+import ElectricWrapper from './electric/provider';
+import Home from './pages';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">hi</header>
-    </div>
+    <ElectricWrapper>
+      <Home />
+    </ElectricWrapper>
   );
-}
+};
+
+export default App;
