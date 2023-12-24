@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { uniqueTabId } from 'electric-sql/util';
 // @ts-ignore
 import { LIB_VERSION } from 'electric-sql/version';
 import { ElectricDatabase, electrify } from 'electric-sql/wa-sqlite';
@@ -24,8 +23,7 @@ const useElectrify = () => {
         url: ELECTRIC_URL,
       };
 
-      const { tabId } = uniqueTabId();
-      const scopedDbName = `basic-${LIB_VERSION}-${tabId}.db`;
+      const scopedDbName = `basic-${LIB_VERSION}.db`;
 
       const conn = await ElectricDatabase.init(scopedDbName, '');
       const electric = await electrify(conn, schema, config);
