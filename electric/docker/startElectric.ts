@@ -3,8 +3,8 @@ import { portSchema } from '../../env/schema';
 import { env } from '../../env/server';
 
 let db = env.DATABASE_URL;
-let electricPort = env.ELECTRIC_PORT ?? 5133;
-let electricProxyPort = env.ELECTRIC_PROXY_PORT ?? 65432;
+let electricPort = env.ELECTRIC_PORT;
+let electricProxyPort = env.ELECTRIC_PROXY_PORT;
 
 let args = process.argv.slice(2);
 
