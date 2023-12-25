@@ -26,8 +26,13 @@ export async function fetchConfiguredElectricProxyPort() {
   return env.ELECTRIC_PROXY_PORT;
 }
 
-const envrcFile = path.join(__dirname, 'docker/compose/.envrc');
-const composeFile = path.join(__dirname, 'docker/compose/docker-compose.yaml');
+const envrcFile = path.join(__dirname, 'docker', 'compose', '.envrc');
+const composeFile = path.join(
+  __dirname,
+  'docker',
+  'compose',
+  'docker-compose.yaml',
+);
 
 export function dockerCompose(
   command: string,
