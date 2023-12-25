@@ -5,9 +5,6 @@ configs:
   postgres_config:
     file: './postgres/postgres.conf'
 
-volumes:
-  pg_data:
-
 services:
   postgres:
     image: '${POSTGRESQL_IMAGE:-postgres:14-alpine}'
@@ -28,7 +25,7 @@ services:
     ports:
       - 5432
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - ../../../dockerdata/postgres/:/var/lib/postgresql/data
 
   electric:
     image: '${ELECTRIC_IMAGE:-electricsql/electric:latest}'
@@ -43,3 +40,7 @@ services:
       - ${ELECTRIC_PROXY_PORT:-65432}:65432
     depends_on:
       - postgres
+
+networks:
+  mynetwork:
+    driver: bridge
