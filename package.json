@@ -13,6 +13,7 @@
     "db:psql": "ts-node ./electric/db/connect.ts",
     "electric:start": "ts-node ./electric/docker/startElectric.ts",
     "electric:check": "ts-node ./electric/check-electric-is-running.ts",
+    "prebuild": "yarn run client:generate",
     "build": "ts-node ./electric/copy-wasm-files.ts && ts-node ./electric/builder.ts",
     "build-prod": "cross-env NODE_ENV=production yarn run build",
     "start": "yarn electric:check && cross-env SERVE=true yarn run build"
