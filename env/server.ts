@@ -1,6 +1,9 @@
 import { createEnv } from '@t3-oss/env-core';
+import dotenv from 'dotenv';
 import { z } from 'zod';
 import { portSchema } from './schema';
+
+dotenv.config();
 
 export const env = createEnv({
   server: {
