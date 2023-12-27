@@ -25,7 +25,7 @@ export const env = createEnv({
     ELECTRIC_HOST_PROXY_PORT: portSchema,
     ELECTRIC_IMAGE: z.string().default('electricsql/electric:latest'),
     LOGICAL_PUBLISHER_HOST: z.string().default('electric'),
-    POSTGRES_PORT: z.string().default('5432'),
+    POSTGRES_PORT: portSchema.default(5432),
     POSTGRES_HOST: z.string().default('postgres'),
     POSTGRES_USER: z.string().default('postgres'),
     POSTGRES_PASSWORD: z.string().default('pg_password'),
