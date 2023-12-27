@@ -14,7 +14,7 @@
     "db:psql": "ts-node ./electric/db/connect.ts",
     "electric:start": "ts-node ./electric/docker/startElectric.ts",
     "electric:check": "ts-node ./electric/check-electric-is-running.ts",
-    "prebuild": "yarn run backend:start",
+    "prebuild": "yarn run backend:up",
     "build": "yarn run client:generate && ts-node ./electric/copy-wasm-files.ts",
     "dev": "ts-node ./electric/copy-wasm-files.ts && yarn electric:check && yarn run vite dev",
     "start": "echo \"App is served with caddy\""
