@@ -11,7 +11,7 @@ const waSqlitePath = path.join(
   'wa-sqlite',
   'dist',
 );
-const publicFolder = path.join(__dirname, '..', 'public');
+const publicFolder = path.join(__dirname, '..', 'app', 'public');
 
 const mjsFileName = 'wa-sqlite-async.mjs';
 const mjsFile = path.join(waSqlitePath, mjsFileName);
