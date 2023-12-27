@@ -26,7 +26,7 @@ export async function fetchConfiguredElectricProxyPort() {
   return env.ELECTRIC_PROXY_PORT;
 }
 
-const envrcFile = path.join(__dirname, 'docker', 'compose', '.envrc');
+const envrcFile = path.join(__dirname, '..', '.env');
 const composeFile = path.join(
   __dirname,
   'docker',
@@ -54,4 +54,8 @@ export function dockerCompose(
   if (callback) {
     proc.on('exit', callback);
   }
+}
+
+export function errorMsg(err: Error | string) {
+  console.error(`\x1b[31m\n${err}\n\x1b[0m`);
 }

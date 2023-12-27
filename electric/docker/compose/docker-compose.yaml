@@ -26,20 +26,24 @@ services:
       - 5432
     volumes:
       - ../../../dockerdata/postgres/:/var/lib/postgresql/data
+    networks:
+      - mynetwork
 
   electric:
     image: '${ELECTRIC_IMAGE:-electricsql/electric:latest}'
     init: true
     environment:
-      DATABASE_URL: postgresql://postgres:pg_password@postgres:5432/${APP_NAME:-electric}
-      PG_PROXY_PASSWORD: proxy_password
-      LOGICAL_PUBLISHER_HOST: electric
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-pg_password}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${APP_NAME:-electric}
+      PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD:-proxy_password}
+      LOGICAL_PUBLISHER_HOST: ${LOGICAL_PUBLISHER_HOST:-electric}
       AUTH_MODE: insecure
     ports:
       - ${ELECTRIC_PORT:-5133}:5133
       - ${ELECTRIC_PROXY_PORT:-65432}:65432
     depends_on:
       - postgres
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:

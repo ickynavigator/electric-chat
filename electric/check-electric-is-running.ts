@@ -1,15 +1,12 @@
+import { env } from '../env/server';
 import { fetchHostPortElectric, fetchHostProxyPortElectric } from './db/utils';
-import {
-  fetchConfiguredElectricPort,
-  fetchConfiguredElectricProxyPort,
-} from './utils';
 
-async function checkElectricIsRunning() {
+function checkElectricIsRunning() {
   const port = fetchHostPortElectric(); // will raise an error if Electric is not running
 
   // Check that the port on which Electric is running
   // is the same as the port to which the app will connect
-  const configuredPort = await fetchConfiguredElectricPort();
+  const configuredPort = env.ELECTRIC_PORT;
 
   if (configuredPort !== port) {
     console.error(
@@ -23,7 +20,8 @@ async function checkElectricIsRunning() {
 
   // Also check that the proxy port is configured correctly
   const proxyPort = fetchHostProxyPortElectric();
-  const configuredProxyPort = await fetchConfiguredElectricProxyPort();
+  const configuredProxyPort = env.ELECTRIC_PROXY_PORT;
+
   if (configuredProxyPort !== proxyPort) {
     console.error(
       '\x1b[31m',
