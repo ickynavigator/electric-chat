@@ -1,5 +1,5 @@
 version: '3.8'
-name: '${APP_NAME:-electric}'
+name: '${APP_NAME}'
 
 configs:
   postgres_config:
@@ -7,11 +7,11 @@ configs:
 
 services:
   postgres:
-    image: '${POSTGRESQL_IMAGE:-postgres:14-alpine}'
+    image: '${POSTGRESQL_IMAGE}'
     environment:
-      POSTGRES_DB: ${APP_NAME:-electric}
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pg_password
+      POSTGRES_DB: ${APP_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     command:
       - -c
       - config_file=/etc/postgresql.conf
@@ -30,16 +30,16 @@ services:
       - mynetwork
 
   electric:
-    image: '${ELECTRIC_IMAGE:-electricsql/electric:latest}'
+    image: '${ELECTRIC_IMAGE}'
     init: true
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-pg_password}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${APP_NAME:-electric}
-      PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD:-proxy_password}
-      LOGICAL_PUBLISHER_HOST: ${LOGICAL_PUBLISHER_HOST:-electric}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${APP_NAME}
+      PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
+      LOGICAL_PUBLISHER_HOST: ${LOGICAL_PUBLISHER_HOST}
       AUTH_MODE: insecure
     ports:
-      - ${ELECTRIC_PORT:-5133}:5133
-      - ${ELECTRIC_PROXY_PORT:-65432}:65432
+      - ${ELECTRIC_PORT}:5133
+      - ${ELECTRIC_PROXY_PORT}:65432
     depends_on:
       - postgres
     networks:

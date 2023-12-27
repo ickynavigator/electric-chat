@@ -1,7 +1,8 @@
 import { spawn } from 'child_process';
 import path from 'path';
 
-const envrcFile = path.join(__dirname, '..', '.env');
+const defaultEnvFile = path.join(__dirname, '..', '.env.docker.default');
+const envFile = path.join(__dirname, '..', '.env');
 const composeFile = path.join(
   __dirname,
   'docker',
@@ -19,7 +20,9 @@ export function dockerCompose(
     '--ansi',
     'always',
     '--env-file',
-    envrcFile,
+    defaultEnvFile,
+    '--env-file',
+    envFile,
     '-f',
     composeFile,
     command,
