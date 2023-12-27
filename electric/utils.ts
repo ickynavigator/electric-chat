@@ -1,30 +1,5 @@
 import { spawn } from 'child_process';
-import fs from 'fs/promises';
 import path from 'path';
-import process from 'process';
-import { env } from '../env/server';
-
-export async function findFirstMatchInFile(
-  regex: RegExp,
-  file: string,
-  notFoundError: string,
-) {
-  const content = await fs.readFile(file, 'utf8');
-  const res = content.match(regex);
-  if (res == null || res[1] == null) {
-    console.error(notFoundError);
-    process.exit(1);
-  }
-  return res[1];
-}
-
-export async function fetchConfiguredElectricPort() {
-  return env.ELECTRIC_PORT;
-}
-
-export async function fetchConfiguredElectricProxyPort() {
-  return env.ELECTRIC_PROXY_PORT;
-}
 
 const envrcFile = path.join(__dirname, '..', '.env');
 const composeFile = path.join(

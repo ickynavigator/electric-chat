@@ -1,44 +1,41 @@
-import fs from 'fs';
-import path from 'path';
 import shell from 'shelljs';
+import { env } from '../../env/server';
+import { errorMsg } from '../utils';
 shell.config.silent = true; // don't log output of child processes
 
 // If we are running the docker compose file,
 // the container running `electric` service will be exposing
 // the proxy port which should be used for all DB connections
 // that intend to use the DDLX syntax extension of SQL.
-const appName = fetchAppName() ?? 'electric';
 const proxyPort = fetchHostProxyPortElectric() ?? 65432;
-const dbUser = 'postgres';
-const proxyPassword = 'proxy_password';
 
 // URL to use when connecting to the proxy from the host OS
 const DATABASE_URL = buildDatabaseURL(
-  dbUser,
-  proxyPassword,
+  env.POSTGRES_USER,
+  env.PG_PROXY_PASSWORD,
   'localhost',
   proxyPort,
-  appName,
+  env.APP_NAME,
 );
 
 // URL to use when connecting to the proxy from a Docker container. This is used when `psql` is exec'd inside the
 // `postgres` service's container to connect to the poxy running in the `electric` service's container.
 const CONTAINER_DATABASE_URL = buildDatabaseURL(
-  dbUser,
-  proxyPassword,
+  env.POSTGRES_USER,
+  env.PG_PROXY_PASSWORD,
   'electric',
   65432,
-  appName,
+  env.APP_NAME,
 );
 
 // URL to display in the terminal for informational purposes. It omits the password but is still a valid URL that can be
 // passed to `psql` running on the host OS.
 const PUBLIC_DATABASE_URL = buildDatabaseURL(
-  dbUser,
+  env.POSTGRES_USER,
   null,
   'localhost',
   proxyPort,
-  appName,
+  env.APP_NAME,
 );
 
 function buildDatabaseURL(
@@ -48,25 +45,28 @@ function buildDatabaseURL(
   port: string | number,
   dbName: string,
 ) {
-  let url = 'postgresql://' + user;
-  if (password) {
-    url += ':' + password;
-  }
-  url += '@' + host + ':' + port + '/' + dbName;
-  return url;
+  return `postgresql://${user}${
+    password ? `:${password}` : ''
+  }@${host}:${port}/${dbName}`;
 }
 
 function error(err: string) {
-  console.error('\x1b[31m', err, '\x1b[0m');
+  errorMsg(err);
   process.exit(1);
 }
 
 function fetchHostPortElectric() {
-  return fetchHostPort(`${appName}-electric-1`, 5133, 'Electric');
+  return (
+    env.ELECTRIC_HOST_PORT ??
+    fetchHostPort(`${env.APP_NAME}-electric-1`, 5133, 'Electric')
+  );
 }
 
 function fetchHostProxyPortElectric() {
-  return fetchHostPort(`${appName}-electric-1`, 65432, 'Electric');
+  return (
+    env.ELECTRIC_HOST_PROXY_PORT ??
+    fetchHostPort(`${env.APP_NAME}-electric-1`, 65432, 'Electric')
+  );
 }
 
 // Returns the host port to which the `containerPort` of the `container` is bound.
@@ -89,31 +89,6 @@ function fetchHostPort(
   if (!isNaN(port)) {
     return port;
   }
-}
-
-// Reads the app name from the docker/compose/.envrc file
-function fetchAppName() {
-  const envrcFile = path.join(__dirname, '..', 'docker', 'compose', '.envrc');
-  const envrc = fs.readFileSync(envrcFile, 'utf8');
-
-  let appName: string | undefined;
-
-  envrc
-    .split(/\r?\n/) // split lines
-    .reverse() // in case the app name would be defined several times
-    .find(line => {
-      const match = line.match(/^(export APP_NAME=)(.*)/);
-      if (match) {
-        const val = match[2];
-        if (val) {
-          appName = val;
-          return true;
-        }
-      }
-      return false;
-    });
-
-  return appName;
 }
 
 export {

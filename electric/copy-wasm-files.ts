@@ -1,5 +1,6 @@
 import { copyFile } from 'node:fs/promises';
 import path from 'node:path';
+import { errorMsg } from './utils';
 
 // Copies the wasm files needed for wa-sqlite
 // from `/node_modules/wa-sqlite/dist` into `public`
@@ -24,7 +25,7 @@ try {
   copyFile(mjsFile, mjsDest);
   copyFile(wasmFile, wasmDest);
 } catch {
-  console.error(
-    'Could not copy wasm files required for wa-sqlite. Did you forget to run `npm install` ?',
+  errorMsg(
+    `Could not copy wasm files required for wa-sqlite. Did you forget to run 'yarn install' ?`,
   );
 }

@@ -7,6 +7,7 @@ dotenv.config();
 
 export const env = createEnv({
   server: {
+    APP_NAME: z.string().default('electric'),
     NODE_ENV: z
       .enum(['development', 'production', 'test'])
       .default('development'),
@@ -20,6 +21,8 @@ export const env = createEnv({
       .default('postgresql://prisma:proxy_password@localhost:65432/electric'),
     ELECTRIC_PORT: portSchema.default(5133),
     ELECTRIC_PROXY_PORT: portSchema.default(65432),
+    ELECTRIC_HOST_PORT: portSchema,
+    ELECTRIC_HOST_PROXY_PORT: portSchema,
     ELECTRIC_IMAGE: z.string().default('electricsql/electric:latest'),
     LOGICAL_PUBLISHER_HOST: z.string().default('electric'),
     POSTGRES_PORT: z.string().default('5432'),

@@ -5,6 +5,7 @@ import fs from 'fs-extra';
 import { IncomingMessage, ServerResponse, createServer, request } from 'http';
 import path from 'path';
 import { env } from '../env/server';
+import { errorMsg } from './utils';
 
 const shouldMinify = env.NODE_ENV === 'production';
 const shouldServe = env.SERVE === 'true';
@@ -25,7 +26,7 @@ const getPlatformStartCommand = (platform: string) => {
   };
 
   if (!isValidPlatform(platform)) {
-    console.error(`Unsupported platform: ${platform}`);
+    errorMsg(`Unsupported platform: ${platform}`);
     return op.darwin;
   }
 
@@ -48,11 +49,11 @@ const liveServer = (buildOpts: BuildOptions) => {
         clients.length = 0;
 
         if (!error && result) {
-          console.log('Watch build succeeded:', result);
+          console.log(`Watch build succeeded: ${result}`);
         }
 
         if (error) {
-          console.error('Watch build failed:', error);
+          errorMsg(`Watch build failed: ${error}`);
         }
       },
     },

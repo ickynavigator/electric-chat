@@ -1,6 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
 import process from 'process';
+import { errorMsg } from '../utils';
 import { DATABASE_URL, PUBLIC_DATABASE_URL } from './utils';
 
 console.info(`Connecting to proxy at ${PUBLIC_DATABASE_URL}`);
@@ -38,10 +39,6 @@ proc.on('exit', code => {
       console.log('⚡ Database already up to date.');
     }
   } else {
-    console.error(
-      `\x1b[31m
-Failed to connect to the DB. Exit code: ${code}
-\x1b[0m`,
-    );
+    errorMsg(`Failed to connect to the DB. Exit code: ${code}`);
   }
 });
